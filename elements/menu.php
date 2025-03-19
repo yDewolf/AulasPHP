@@ -1,19 +1,19 @@
 <div id="menu">
-    <ul>
-        <li>
-            <a href="index.php?p=home">Home</a>
+    <ul class="navbar nav">
+        <li class="navbar-item">
+            <a href="index.php?p=home" class="navbar-link">Home</a>
         </li>
-        <li>
-            <a href="index.php?p=professores">Professores</a>
+        <li class="navbar-item">
+            <a href="index.php?p=professores" class="navbar-link">Professores</a>
         </li>
-        <li>
-            <a href="index.php?p=cursos">Cursos</a>
+        <li class="navbar-item">
+            <a href="index.php?p=cursos" class="navbar-link">Cursos</a>
         </li>
-        <li>
-            <a href="index.php?p=login">Login</a>
+        <li class="navbar-item">
+            <a href="index.php?p=login" class="navbar-link">Login</a>
         </li>
-        <li>
-            <a href="index.php?p=fale">Fale Conosco</a>
+        <li class="navbar-item">
+            <a href="index.php?p=fale" class="navbar-link">Fale Conosco</a>
         </li>
     </ul>
 </div>
