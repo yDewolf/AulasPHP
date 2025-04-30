@@ -70,13 +70,15 @@ button[type="submit"]:hover {
 }
 
 .column {
-    text-align: justify;
     padding: 0 20px;
-
     display: flex;
     flex-direction: column;
     width: 50%;
     margin: 0 auto;
+    
+    p {
+        text-align: justify;
+    }
 }
 
 .medium-img {
