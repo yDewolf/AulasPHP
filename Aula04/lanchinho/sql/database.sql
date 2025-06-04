@@ -1,0 +1,11 @@
+CREATE DATABASE lanchinho;
+USE lanchinho;
+
+
+CREATE TABLE produtos(
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nomeProd VARCHAR(255) NOT NULL,
+    ingredientes TEXT NOT NULL,
+    precoUnit DECIMAL(9, 2) NOT NULL,
+    dataCad TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
