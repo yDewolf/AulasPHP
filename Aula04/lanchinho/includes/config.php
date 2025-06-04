@@ -11,4 +11,4 @@ if (!$conn) {
     echo "Erro ao conectar na database | ".mysqli_connect_errno(). " - ".mysqli_connect_error();
 }
 
-echo "Conectado à database com sucesso! ";
+// echo "Conectado à database com sucesso! ";
