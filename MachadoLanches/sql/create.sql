@@ -30,7 +30,7 @@ CREATE TABLE produtos (
 CREATE TABLE mesas (
     id_mesa INT PRIMARY KEY AUTO_INCREMENT,
     quantidade_pessoas INT NOT NULL,
-    horario_entrada DATETIME DEFAULT CURRENT_DATETIME,
+    horario_entrada DATETIME DEFAULT NOW(),
     horario_saida DATETIME,
     vazia BOOLEAN NOT NULL DEFAULT TRUE
 );
@@ -42,3 +42,13 @@ CREATE TABLE pedidos (
     FOREIGN KEY (id_mesa) REFERENCES mesas(id_mesa),
     FOREIGN KEY (id_pedido) REFERENCES produtos(id_produto)
 );
+
+-- Selecionar produtos de uma mesa específica
+-- SELECT 
+--     produtos.id_produto,
+--     produtos.nome,
+--     produtos.preco_unit
+-- FROM pedidos
+--     JOIN mesas ON pedidos.id_mesa = mesas.id_mesa,
+--     JOIN produtos ON pedidos.id_produto = produtos.id_produto
+-- WHERE pedidos.id_mesa = {mesa};
