@@ -25,16 +25,16 @@
             </div>
             <div class="mb-4">
                 <label for="caminho" class="block text-sm font-medium mb-1">Caminho do Arquivo</label>
-                <input type="file" id="caminho" name="caminho" class="w-full p-2 rounded bg-gray-600 border
+                <input type="text" id="caminho" name="caminho" class="w-full p-2 rounded bg-gray-600 border
                 border-gray-500" required>
             </div>
                 <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4
-                rounded transition-colors duration-200">
-                Salvar Música
-            </button>
+                    rounded transition-colors duration-200">
+                    Salvar Música
+                </button>
         </form>
     </div>
-    
+    <a href="list.html">Ver músicas</a>
     <div class="songs mt-4">
         <div class="bg-gray-700 p-4 rounded-lg shadow-lg flex items-center justify-between">
             <div class="flex items-center">
@@ -53,7 +53,7 @@
     </div>
 
     <script>
-        const API_LINK = "http://127.0.0.1/AulasPHP/player-de-musicas/src/"
+        const API_LINK = "http://localhost/AulasPHP/player-de-musicas/src/"
         document.getElementById('add-song-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const form = e.target;
@@ -63,9 +63,14 @@
                 album: form.album.value,
                 caminho_arquivo: form.caminho.value
             };
+            console.log(data);
             const response = await fetch(API_LINK + 'create_song.php', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    "Access-Control-Allow-Origin": "*",
+                    "Referrer-Policy": "no-referrer" 
+                },
                 body: JSON.stringify(data)
             });
             const result = await response.json();

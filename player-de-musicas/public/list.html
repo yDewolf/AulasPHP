@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista de Músicas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-800 text-white p-8">
+    <a href="index.html">Página principal</a>
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-4xl font-bold text-center text-teal-400 mb-8">Minhas Músicas</h1>
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <table class="w-full text-left table-auto">
+            <thead>
+                <tr class="text-gray-400">
+                <th class="p-3 font-semibold">Título</th>
+                <th class="p-3 font-semibold">Artista</th>
+                <th class="p-3 font-semibold">Álbum</th>
+                </tr>
+            </thead>
+            <tbody id="songs-table-body">
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <script>
+        async function fetchSongs() {
+        const response = await fetch('http://localhost/AulasPHP/player-de-musicas/src/list_songs.php');
+        const result = await response.json();
+        console.log(result);
+        const tableBody = document.getElementById('songs-table-body');
+        tableBody.innerHTML = ''; // Limpa a tabela
+        if (result.status.toLowerCase() === 'sucesso' && result.data.length > 0) {
+            result.data.forEach(song => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-600 hover:bg-gray-600';
+            row.innerHTML = `
+                <td class="p-3">${song.titulo}</td>
+                <td class="p-3">${song.artista}</td>
+                <td class="p-3">${song.album || 'N/A'}</td>`;
+            tableBody.appendChild(row);
+        });
+        } else {
+            tableBody.innerHTML = '<tr><td colspan="3" class="text-center p-4 text-gray-500">Nenhuma música encontrada.</td></tr>';
+        }
+        }
+        document.addEventListener('DOMContentLoaded', fetchSongs);
+    </script>
+</body>
+</html>
