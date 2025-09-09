@@ -1,49 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lista de Músicas</title>
-<script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Músicas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-800 text-white p-8">
-    <a href="index.html">Página principal</a>
     <div class="container mx-auto max-w-4xl">
         <h1 class="text-4xl font-bold text-center text-teal-400 mb-8">Minhas Músicas</h1>
-        <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
-        <table class="w-full text-left table-auto">
-            <thead>
-                <tr class="text-gray-400">
-                <th class="p-3 font-semibold">Título</th>
-                <th class="p-3 font-semibold">Artista</th>
-                <th class="p-3 font-semibold">Álbum</th>
-                </tr>
-            </thead>
-            <tbody id="songs-table-body">
-            </tbody>
-        </table>
+            <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+            <table class="w-full text-left table-auto">
+                <thead>
+                    <tr class="text-gray-400">
+                    <th class="p-3 font-semibold">Título</th>
+                    <th class="p-3 font-semibold">Artista</th>
+                    <th class="p-3 font-semibold">Álbum</th>
+                    <th class="p-3 font-semibold">Ações</th> </tr>
+                </thead>
+                <tbody id="songs-table-body">
+                </tbody>
+            </table>
         </div>
     </div>
     <script>
         async function fetchSongs() {
         const response = await fetch('http://localhost/AulasPHP/player-de-musicas/src/list_songs.php');
         const result = await response.json();
-        console.log(result);
         const tableBody = document.getElementById('songs-table-body');
-        tableBody.innerHTML = ''; // Limpa a tabela
+        tableBody.innerHTML = '';
         if (result.status.toLowerCase() === 'sucesso' && result.data.length > 0) {
             result.data.forEach(song => {
             const row = document.createElement('tr');
             row.className = 'border-b border-gray-600 hover:bg-gray-600';
             row.innerHTML = `
-                <td class="p-3">${song.titulo}</td>
-                <td class="p-3">${song.artista}</td>
-                <td class="p-3">${song.album || 'N/A'}</td>`;
+            <td class="p-3">${song.titulo}</td>
+            <td class="p-3">${song.artista}</td>
+            <td class="p-3">${song.album || 'N/A'}</td>
+            <td class="p-3">
+            <button onclick="editSong(${song.id})" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-xs transition-colors duration-200">Editar</button>
+            Aula 3: Editando e Excluindo Músicas (CRUD: Update & Delete) 5
+            <button onclick="deleteSong(${song.id})" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded text-xs transition-colors duration-200 ml-2">Excluir</button>
+            </td>
+            `;
             tableBody.appendChild(row);
         });
         } else {
-            tableBody.innerHTML = '<tr><td colspan="3" class="text-center p-4 text-gray-500">Nenhuma música encontrada.</td></tr>';
+            tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-gray-500">Nenhuma música encontrada.</td></tr>`;
         }
+        }
+        async function deleteSong(id) {
+            if (!confirm('Tem certeza que deseja excluir esta música?')) {
+                return;
+            }
+            const response = await fetch(`http://localhost/AulasPHP/player-de-musicas/src/delete_song.php?id=${id}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+                alert(result.mensagem);
+                fetchSongs();
+            }
+            function editSong(id) {
+                alert(`Você clicou em editar a música com ID: ${id}`);
         }
         document.addEventListener('DOMContentLoaded', fetchSongs);
     </script>
