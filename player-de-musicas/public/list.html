@@ -10,6 +10,13 @@
     <a href="index.html">Cadastrar músicas</a>
     <audio id="audio-player" src="" class="hidden">Audio?</audio>
     <div class="container mx-auto max-w-4xl">
+        <div class="container mx-auto max-w-4xl">
+            <div class="mb-4">
+                <input type="search" id="search-input" placeholder="Buscar por título ou artista..."
+                class="w-full p-2 rounded bg-gray-600 border border-gray-500 text-white">
+            </div>
+        </div>
+
         <div class="bg-gray-700 p-4 rounded-lg shadow-lg mb-8 flex items-center justify-between">
             <div id="player-info" class="text-sm">
                 <span class="font-bold" id="player-title">Nenhuma música selecionada</span>
@@ -64,13 +71,31 @@
     
     <script>
         const API_LINK = "http://localhost/AulasPHP/player-de-musicas/src/";
+        let allSongs = [];
+        searchInput = document.getElementById("search-input");
+        searchInput.addEventListener('input', (event) => {
+            fetchSongs(searchInput.value);
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchSongs();
+        });
 
-        async function fetchSongs() {
-            const response = await fetch(API_LINK + 'list_songs.php');
+        async function fetchSongs(searchTerm = '') {
+            let url = API_LINK + "list_songs.php";
+            console.log(searchTerm);
+            if (searchTerm != "") {
+                url += `?search=${searchTerm}`;
+            }
+            
+            const response = await fetch(url);
             const result = await response.json();
             const tableBody = document.getElementById('songs-table-body');
             tableBody.innerHTML = '';
+            
             if (result.status.toLowerCase() === 'sucesso' && result.data.length > 0) {
+                allSongs = result.data; 
+                
                 result.data.forEach(song => {
                 const row = document.createElement('tr');
                 row.className = 'border-b border-gray-600 hover:bg-gray-600';
@@ -128,11 +153,12 @@
         const playerTitle = document.getElementById('player-title');
         const playerArtist = document.getElementById('player-artist');
         
-        let selectedSongID = 0;
+        let currentSongIndex = 0;
+        let selectedSongId = 2;
 
         playButton.addEventListener('click', () => {
-            playSong(selectedSongID);
-            console.log("Playing song: ", selectedSongID)
+            playSong(selectedSongId);
+            console.log("Playing song: ", selectedSongId)
             playButton.classList.add('hidden');
             pauseButton.classList.remove('hidden');
         });
@@ -149,31 +175,17 @@
         document.getElementById('next-button').addEventListener('click', nextSong);
         document.getElementById('prev-button').addEventListener('click', prevSong);
 
-        let allSongs = [];
-        async function fetchSongs() {
-            const response = await fetch(API_LINK + 'list_songs.php');
-            const result = await response.json();
-            if (result.status.toLowerCase() === 'sucesso' && result.data.length > 0) {
-                allSongs = result.data; 
-                result.data.forEach(song => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                    <td class="p-3">${song.titulo}</td>
-                    <td class="p-3">${song.artista}</td>
-                    <td class="p-3">${song.album || 'N/A'}</td>
-                    <td class="p-3">
-                    <button onclick="playSong(${song.id})" class="bg-teal-500 hover:bg-teal-600 text-white fontbold py-1 px-2 rounded text-xs transition-colors duration-200">
-                    Play
-                    </button>
-                    </td>
-                    `;
-                });
-            }
-        }
         
         async function playSong(id) {
-            const song = allSongs.find(s => s.id === id);
-            console.log(allSongs)
+            let song;
+            for (idx in allSongs) {
+                console.log(idx);
+                if (allSongs[idx].id == id) {
+                    song = allSongs[idx];
+                }
+            }
+
+            console.log(song)
 
             if (song) {
                 currentSongIndex = allSongs.indexOf(song);
@@ -195,13 +207,15 @@
         function nextSong() {
             if (allSongs.length === 0) return;
                 currentSongIndex = (currentSongIndex + 1) % allSongs.length;
-                playSong(allSongs[currentSongIndex].id);
+                selectedSongId = allSongs[currentSongIndex].id
+                playSong(selectedSongId);
             }
     
         function prevSong() {
             if (allSongs.length === 0) return;
             currentSongIndex = (currentSongIndex - 1 + allSongs.length) % allSongs.length;
-            playSong(allSongs[currentSongIndex].id);
+            selectedSongId = allSongs[currentSongIndex].id
+            playSong(selectedSongId);
         }
     </script>
 </body>
