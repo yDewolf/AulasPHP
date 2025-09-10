@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-800 text-white p-8">
-    <h1 class="text-4xl font-bold text-center text-teal-400">Meu Player de Música</h1>
+    <!-- <h1 class="text-4xl font-bold text-center text-teal-400">Meu Player de Música</h1> -->
     <div class="container mx-auto max-w-2xl">
         <h1 class="text-4xl font-bold text-center text-teal-400 mb-8">Adicionar Música</h1>
         <form id="add-song-form" class="bg-gray-700 p-6 rounded-lg shadow-lg">
@@ -24,18 +24,18 @@
                 <input type="text" id="album" name="album" class="w-full p-2 rounded bg-gray-600 border border-gray-500">
             </div>
             <div class="mb-4">
-                <label for="caminho" class="block text-sm font-medium mb-1">Caminho do Arquivo</label>
+                <label for="caminho" class="block text-sm font-medium mb-1">Caminho do Arquivo*</label>
                 <input type="text" id="caminho" name="caminho" class="w-full p-2 rounded bg-gray-600 border
                 border-gray-500" required>
             </div>
-                <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4
-                    rounded transition-colors duration-200">
-                    Salvar Música
-                </button>
+            <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4
+                rounded transition-colors duration-200">
+                Salvar Música
+            </button>
         </form>
     </div>
     <a href="list.html">Ver músicas</a>
-    <div class="songs mt-4">
+    <!-- <div class="songs mt-4">
         <div class="bg-gray-700 p-4 rounded-lg shadow-lg flex items-center justify-between">
             <div class="flex items-center">
                 <div class="bg-gray-600 w-12 h-12 rounded-full mr-4"></div>
@@ -50,7 +50,7 @@
                 </svg>
             </button>
         </div>
-    </div>
+    </div> -->
 
     <script>
         const API_LINK = "http://localhost/AulasPHP/player-de-musicas/src/"

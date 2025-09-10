@@ -7,6 +7,43 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-800 text-white p-8">
+    <a href="index.html">Cadastrar músicas</a>
+    <audio id="audio-player" src="" class="hidden">Audio?</audio>
+    <div class="container mx-auto max-w-4xl">
+        <div class="bg-gray-700 p-4 rounded-lg shadow-lg mb-8 flex items-center justify-between">
+            <div id="player-info" class="text-sm">
+                <span class="font-bold" id="player-title">Nenhuma música selecionada</span>
+                <span class="text-gray-400" id="player-artist"></span>
+            </div>
+            <div class="flex items-center">
+
+            <button id="prev-button" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full
+            transition-all duration-100ms hover:bg-teal-600 hover:px-5 hover:py-3">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000
+            16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
+            </button>
+
+            <button id="next-button" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full
+            transition-all duration-100ms hover:bg-teal-600 hover:px-5 hover:py-3">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000
+            16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
+            </button>
+
+            <button id="play-button" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full
+            transition-all duration-100ms hover:bg-teal-600 hover:px-5 hover:py-3">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000
+            16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
+            </button>
+
+            <button id="pause-button" class="hidden bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4
+            rounded-full transition-colors duration-200">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000
+            16zM8 7v6l5-3-5-3z"></path></svg>
+            </button>
+            </div>
+        </div>
+    </div>
+
     <div class="container mx-auto max-w-4xl">
         <h1 class="text-4xl font-bold text-center text-teal-400 mb-8">Minhas Músicas</h1>
             <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
@@ -23,47 +60,149 @@
             </table>
         </div>
     </div>
+
+    
     <script>
+        const API_LINK = "http://localhost/AulasPHP/player-de-musicas/src/";
+
         async function fetchSongs() {
-        const response = await fetch('http://localhost/AulasPHP/player-de-musicas/src/list_songs.php');
-        const result = await response.json();
-        const tableBody = document.getElementById('songs-table-body');
-        tableBody.innerHTML = '';
-        if (result.status.toLowerCase() === 'sucesso' && result.data.length > 0) {
-            result.data.forEach(song => {
-            const row = document.createElement('tr');
-            row.className = 'border-b border-gray-600 hover:bg-gray-600';
-            row.innerHTML = `
-            <td class="p-3">${song.titulo}</td>
-            <td class="p-3">${song.artista}</td>
-            <td class="p-3">${song.album || 'N/A'}</td>
-            <td class="p-3">
-            <button onclick="editSong(${song.id})" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-xs transition-colors duration-200">Editar</button>
-            Aula 3: Editando e Excluindo Músicas (CRUD: Update & Delete) 5
-            <button onclick="deleteSong(${song.id})" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded text-xs transition-colors duration-200 ml-2">Excluir</button>
-            </td>
-            `;
-            tableBody.appendChild(row);
-        });
-        } else {
-            tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-gray-500">Nenhuma música encontrada.</td></tr>`;
-        }
+            const response = await fetch(API_LINK + 'list_songs.php');
+            const result = await response.json();
+            const tableBody = document.getElementById('songs-table-body');
+            tableBody.innerHTML = '';
+            if (result.status.toLowerCase() === 'sucesso' && result.data.length > 0) {
+                result.data.forEach(song => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-600 hover:bg-gray-600';
+                row.innerHTML = `
+                <td class="p-3">${song.titulo}</td>
+                <td class="p-3">${song.artista}</td>
+                <td class="p-3">${song.album || 'N/A'}</td>
+                <td class="p-3">
+                <button onclick="editSong(${song.id})" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-xs transition-colors duration-200">Editar</button>
+                <button onclick="deleteSong(${song.id})" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded text-xs transition-colors duration-200 ml-2">Excluir</button>
+                </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-gray-500">Nenhuma música encontrada.</td></tr>`;
+            }
         }
         async function deleteSong(id) {
             if (!confirm('Tem certeza que deseja excluir esta música?')) {
                 return;
             }
-            const response = await fetch(`http://localhost/AulasPHP/player-de-musicas/src/delete_song.php?id=${id}`, {
+            const response = await fetch(API_LINK + `delete_song.php?id=${id}`, {
                 method: 'DELETE'
             });
+        
             const result = await response.json();
-                alert(result.mensagem);
-                fetchSongs();
-            }
-            function editSong(id) {
-                alert(`Você clicou em editar a música com ID: ${id}`);
+            alert(result.mensagem);
+            fetchSongs();
+        }
+
+        function editSong(id) {
+            alert(`Você clicou em editar a música com ID: ${id}`);
         }
         document.addEventListener('DOMContentLoaded', fetchSongs);
+
+        async function editSong(id) {
+            const response = await fetch(API_LINK + `get_song.php?id=${id}`);
+            const result = await response.json();
+            if (result.status === 'sucesso') {
+                const song = result.data;
+                document.getElementById('edit-titulo').value = song.titulo;
+                document.getElementById('edit-artista').value = song.artista;
+
+                return;
+            }
+            alert(result.mensagem);
+        }
+    </script>
+    <!-- Funções relacionadas à áudio e música -->
+    <script>
+        const audioPlayer = document.getElementById('audio-player');
+        const playButton = document.getElementById('play-button');
+        const pauseButton = document.getElementById('pause-button');
+        const playerTitle = document.getElementById('player-title');
+        const playerArtist = document.getElementById('player-artist');
+        
+        let selectedSongID = 0;
+
+        playButton.addEventListener('click', () => {
+            playSong(selectedSongID);
+            console.log("Playing song: ", selectedSongID)
+            playButton.classList.add('hidden');
+            pauseButton.classList.remove('hidden');
+        });
+        pauseButton.addEventListener('click', () => {
+            pauseSong();
+            console.log("Paused Song")
+            playButton.classList.remove('hidden');
+            pauseButton.classList.add('hidden');
+        });
+
+        document.addEventListener('DOMContentLoaded', fetchSongs);
+        fetchSongs()
+
+        document.getElementById('next-button').addEventListener('click', nextSong);
+        document.getElementById('prev-button').addEventListener('click', prevSong);
+
+        let allSongs = [];
+        async function fetchSongs() {
+            const response = await fetch(API_LINK + 'list_songs.php');
+            const result = await response.json();
+            if (result.status.toLowerCase() === 'sucesso' && result.data.length > 0) {
+                allSongs = result.data; 
+                result.data.forEach(song => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td class="p-3">${song.titulo}</td>
+                    <td class="p-3">${song.artista}</td>
+                    <td class="p-3">${song.album || 'N/A'}</td>
+                    <td class="p-3">
+                    <button onclick="playSong(${song.id})" class="bg-teal-500 hover:bg-teal-600 text-white fontbold py-1 px-2 rounded text-xs transition-colors duration-200">
+                    Play
+                    </button>
+                    </td>
+                    `;
+                });
+            }
+        }
+        
+        async function playSong(id) {
+            const song = allSongs.find(s => s.id === id);
+            console.log(allSongs)
+
+            if (song) {
+                currentSongIndex = allSongs.indexOf(song);
+                audioPlayer.src = `${song.caminho_arquivo}`;
+                audioPlayer.play();
+
+                playerTitle.textContent = song.titulo;
+                playerArtist.textContent = `- ${song.artista}`;
+
+                playButton.classList.add('hidden');
+                pauseButton.classList.remove('hidden');
+            }
+        }
+
+        function pauseSong() {
+            audioPlayer.pause();
+        }
+
+        function nextSong() {
+            if (allSongs.length === 0) return;
+                currentSongIndex = (currentSongIndex + 1) % allSongs.length;
+                playSong(allSongs[currentSongIndex].id);
+            }
+    
+        function prevSong() {
+            if (allSongs.length === 0) return;
+            currentSongIndex = (currentSongIndex - 1 + allSongs.length) % allSongs.length;
+            playSong(allSongs[currentSongIndex].id);
+        }
     </script>
 </body>
 </html>
