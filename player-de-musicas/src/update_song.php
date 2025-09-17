@@ -18,18 +18,19 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":titulo", $data["titulo"]);
     $stmt->bindParam(":artista", $data["artista"]);
-    $stmt->bindParam(":album", $data["album"] ?? null);
-    $stmt->bindParam(":caminho_arquivo", $data["caminho_arquivo"] ?? null);
+    $stmt->bindParam(":album", $data["album"]);
+    $stmt->bindParam(":caminho_arquivo", $data["caminho_arquivo"]);
+    $stmt->bindParam(":id", $id);
 
     $stmt->execute();
 
     if ($stmt->rowCount()) {
-    echo json_encode(['mensagem' => 'Música atualizada com sucesso!']);
+        echo json_encode(['message' => 'Música atualizada com sucesso!']);
     } else {
-    http_response_code(404);
-    echo json_encode(['mensagem' => 'Música não encontrada ou nenhum dado alterado.']);
+        http_response_code(404);
+        echo json_encode(['message' => 'Música não encontrada ou nenhum dado alterado.']);
     }
 } catch (\PDOException $e) {
     http_response_code(500);
-    echo json_encode(['mensagem' => 'Erro ao atualizar a música: ' . $e->getMessage()]);
+    echo json_encode(['message' => 'Erro ao atualizar a música: ' . $e->getMessage()]);
 }

@@ -45,7 +45,7 @@
 
     <div class="container mx-auto max-w-4xl">
         <h1 class="text-4xl font-bold text-center text-teal-400 mb-8">Gerenciador de Músicas</h1>
-        <h2 class="text-2xl font-bold mb-4">Adicionar Nova Música</h2>
+        <h2 class="text-2xl font-bold mb-4">Adicionar / Editar Músicas</h2>
         <form id="add-song-form" class="bg-gray-700 p-6 rounded-lg shadow-lg">
             <div class="mb-4">
                 <label for="titulo" class="block text-sm font-medium mb-1">Título*</label>
@@ -115,24 +115,44 @@
                 album: form.album.value,
                 caminho_arquivo: form.caminho.value
             };
-            console.log(data);
-            const response = await fetch(API_LINK + 'create_song.php', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    "Access-Control-Allow-Origin": "*",
-                    "Referrer-Policy": "no-referrer" 
-                },
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            alert(result.mensagem);
+
+            let result_json;
+            if (isEditingSong) {
+                const response = await fetch(API_LINK + 'update_song.php?id=' + editingSongId, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        "Access-Control-Allow-Origin": "*",
+                        "Referrer-Policy": "no-referrer" 
+                    },
+                    body: JSON.stringify(data)
+                });
+                isEditingSong = false;
+                result_json = await response.json();
+            } else {
+                const response = await fetch(API_LINK + 'create_song.php', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        "Access-Control-Allow-Origin": "*",
+                        "Referrer-Policy": "no-referrer" 
+                    },
+                    body: JSON.stringify(data)
+                });
+                result_json = await response.json();
+            }
+
+            alert(result_json.message);
+            fetchSongs();
             form.reset();
         });
     </script>
 
     <script>
         let allSongs = [];
+        let isEditingSong = false;
+        let editingSongId = -1;
+
         searchInput = document.getElementById("search-input");
         searchInput.addEventListener('input', (event) => {
             fetchSongs(searchInput.value);
@@ -198,8 +218,12 @@
             const result = await response.json();
             if (result.status === 'sucesso') {
                 const song = result.data;
-                document.getElementById('edit-titulo').value = song.titulo;
-                document.getElementById('edit-artista').value = song.artista;
+                isEditingSong = true;
+                editingSongId = id;
+                document.getElementById('titulo').value = song.titulo;
+                document.getElementById('artista').value = song.artista;
+                document.getElementById('album').value = song.album;
+                document.getElementById('caminho').value = song.caminho_arquivo;
 
                 return;
             }
