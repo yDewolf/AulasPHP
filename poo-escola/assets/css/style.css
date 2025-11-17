@@ -1,0 +1,12 @@
+:root {
+    --default-border-radius: 0px;
+    --default-border-size: 2px;
+}
+
+.register-form {
+    width: 500px;
+}
+
+.content {
+    padding: 20px;
+}
