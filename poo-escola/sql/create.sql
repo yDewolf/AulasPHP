@@ -1,9 +1,17 @@
+DROP DATABASE escola;
 CREATE DATABASE escola;
 USE escola;
 
 CREATE TABLE alunos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100),
-    idade INT,
-    matricula VARCHAR(20)
+    nome VARCHAR(127) NOT NULL,
+    idade INT NOT NULL,
+    matricula VARCHAR(20) NOT NULL
 );
+
+CREATE TABLE Professores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(127) NOT NULL,
+    cpf CHAR(14) NOT NULL,
+    especializacao VARCHAR(127) NOT NULL
+);  
